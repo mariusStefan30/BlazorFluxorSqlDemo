@@ -30,7 +30,7 @@ git clone https://github.com/tu-user/BlazorFluxorSqlDemo.git
 cd BlazorFluxorSqlDemo
 dotnet restore
 
-```bash
+---
 
 📂 Structura proiectului
 
@@ -68,3 +68,19 @@ Effect (ItemsEffects) → interceptează acțiunea, apelează ItemsService pentr
 Reducer (ItemsReducers) → actualizează state-ul (ex. IsLoading=false, Items=data).
 
 UI → e legat la IState<ItemsState> și se re-randează automat când state-ul se schimbă.
+
+--- Screenshots
+
+<img width="1917" height="1024" alt="image" src="https://github.com/user-attachments/assets/d9f91a9e-0ca8-43e6-9b0b-56f8f4a03ed8" />
+
+Before loading from db:
+
+<img width="1909" height="1013" alt="image" src="https://github.com/user-attachments/assets/47d4872d-1ed3-40c5-9690-4d22ac821c92" />
+
+
+After loading:
+
+<img width="1918" height="1026" alt="image" src="https://github.com/user-attachments/assets/72bc242e-57b7-412d-ac37-91632b72c7ac" />
+
+
+
