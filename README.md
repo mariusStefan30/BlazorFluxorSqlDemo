@@ -1,5 +1,7 @@
 ﻿# BlazorFluxorSqlDemo
 
+<img width="1912" height="1025" alt="image" src="https://github.com/user-attachments/assets/2a71e4c5-0006-4027-98d9-77831b133af5" />
+
 
 Un demo simplu care arată cum să folosești **Blazor Server + Fluxor (state management) + SQL Server (EF Core)** pentru a gestiona o listă de itemi (`Items`).
 
