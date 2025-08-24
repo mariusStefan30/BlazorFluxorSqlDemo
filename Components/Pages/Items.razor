@@ -1,0 +1,97 @@
+﻿@page "/items"
+@using Fluxor
+@using BlazorFluxorSqlDemo.Features.Items
+@inject IState<ItemsState> ItemsState
+@inject IDispatcher Dispatcher
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+
+<PageTitle>Items (Fluxor + SQL)</PageTitle>
+
+<h1 class="mb-3">Items (Fluxor + SQL Server)</h1>
+
+<div class="d-flex gap-2 mb-3">
+    <button class="btn btn-primary" @onclick="Load" disabled="@ItemsState.Value.IsLoading">
+        @(ItemsState.Value.IsLoading ? "Loading..." : "Load from DB")
+    </button>
+
+    <button class="btn @(ItemsState.Value.IsPolling ? "btn-danger" : "btn-outline-secondary")"
+            @onclick="TogglePolling">
+        @(ItemsState.Value.IsPolling ? "Stop live refresh" : "Start live refresh")
+    </button>
+</div>
+
+<EditForm Model="@_newItem" OnValidSubmit="@Add">
+    <DataAnnotationsValidator />
+    <div class="input-group mb-3" style="max-width:420px">
+        <InputText class="form-control" @bind-Value="_newItem.Name" placeholder="Item name" />
+        <button class="btn btn-success" type="submit">Add</button>
+    </div>
+    <ValidationSummary />
+</EditForm>
+
+@if (ItemsState.Value.Error is not null)
+{
+    <div class="alert alert-danger">Error: @ItemsState.Value.Error</div>
+}
+
+@if (ItemsState.Value.Items is null)
+{
+    <p class="text-muted">Apasă „Load from DB” sau „Start live refresh”.</p>
+}
+else if (ItemsState.Value.Items.Count == 0)
+{
+    <p class="text-muted">Nu există înregistrări. Adaugă un item.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Id</th><th>Name</th><th>Created (UTC)</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var i in ItemsState.Value.Items)
+            {
+                <tr>
+                    <td>@i.Id</td>
+                    <td>@i.Name</td>
+                    <td>@i.CreatedAt.ToString("u")</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-danger" @onclick="@(() => Delete(i.Id))">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private NewItem _newItem = new();
+
+    void Load() => Dispatcher.Dispatch(new LoadItemsAction());
+
+    void TogglePolling()
+    {
+        var enable = !ItemsState.Value.IsPolling;
+        Dispatcher.Dispatch(new TogglePollingAction(enable));
+        if (enable) Dispatcher.Dispatch(new LoadItemsAction());
+    }
+
+    async Task Add()
+    {
+        if (!string.IsNullOrWhiteSpace(_newItem.Name))
+        {
+            Dispatcher.Dispatch(new AddItemAction(_newItem.Name.Trim()));
+            _newItem = new();
+            await Task.Yield();
+        }
+    }
+
+    void Delete(int id) => Dispatcher.Dispatch(new DeleteItemAction(id));
+
+    public class NewItem
+    {
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Name { get; set; } = "";
+    }
+}
