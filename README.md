@@ -25,11 +25,12 @@ Un demo simplu care arată cum să folosești **Blazor Server + Fluxor (state ma
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) cu workload **ASP.NET + web development**
 
 ### 2. Clone & Restore
-```bash
+
 git clone https://github.com/tu-user/BlazorFluxorSqlDemo.git
 cd BlazorFluxorSqlDemo
 dotnet restore
 
+```bash
 
 📂 Structura proiectului
 
